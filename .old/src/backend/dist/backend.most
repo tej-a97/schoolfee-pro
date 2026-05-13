@@ -1,0 +1,671 @@
+// Version: 1.0.0
+type AuditLogId__176736089 = Nat;
+type AuditLog__942324523 =
+  {
+    action : Text;
+    entityId : Nat;
+    entityType : Text;
+    id : AuditLogId__176736089;
+    newValue : Text;
+    oldValue : Text;
+    timestamp : Timestamp__301639476;
+    userId : UserId__158757552
+  };
+type BillId__994444545 = Nat;
+type BillStatus__488604250 =
+  {#Cancelled; #Overdue; #Paid; #Partial; #Pending};
+type Bill__359205290 =
+  {
+    academicYear : Text;
+    billNumber : Text;
+    classId : ClassId__805055241;
+    createdAt : Timestamp__301639476;
+    discountAmount : Nat;
+    dueDate : Timestamp__301639476;
+    feeComponents : [FeeComponent__348098996];
+    fineAmount : Nat;
+    id : BillId__994444545;
+    month : Text;
+    netAmount : Nat;
+    status : BillStatus__488604250;
+    studentId : StudentId__585118929;
+    totalAmount : Nat
+  };
+type ClassId__805055241 = Nat;
+type Class__199118982 =
+  {
+    academicYear : Text;
+    capacity : Nat;
+    classTeacherId : ?UserId__158757552;
+    createdAt : Timestamp__301639476;
+    id : ClassId__805055241;
+    name : Text;
+    section : Text;
+    studentCount : Nat
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type FeeCategory__175267181 =
+  {
+    #Admission;
+    #Custom;
+    #Exam;
+    #Hostel;
+    #Library;
+    #Miscellaneous;
+    #Transport;
+    #Tuition
+  };
+type FeeComponent__348098996 =
+  {
+    amount : Nat;
+    category : FeeCategory__175267181;
+    discount : Nat;
+    fine : Nat
+  };
+type FeeStructureId__947360498 = Nat;
+type FeeStructure__229908784 =
+  {
+    academicYear : Text;
+    amount : Nat;
+    category : FeeCategory__175267181;
+    classId : ClassId__805055241;
+    createdAt : Timestamp__301639476;
+    customCategoryName : Text;
+    discountPercent : Nat;
+    dueDayOfMonth : Nat;
+    fineRatePercent : Nat;
+    id : FeeStructureId__947360498;
+    isActive : Bool;
+    paymentPlan : PaymentPlan__778863178
+  };
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type NotificationId__307495059 = Nat;
+type NotificationType__338939744 =
+  {#BillGenerated; #FeeReminder; #OverdueAlert; #PaymentConfirmation};
+type Notification__264708741 =
+  {
+    createdAt : Timestamp__301639476;
+    id : NotificationId__307495059;
+    isRead : Bool;
+    message : Text;
+    notifType : NotificationType__338939744;
+    recipientPrincipal : Principal;
+    studentId : StudentId__585118929
+  };
+type PaymentId__1028686908 = Nat;
+type PaymentMethod__46913440 = {#BankTransfer; #Card; #Cash; #Online; #UPI};
+type PaymentPlan__778863178 = {#Monthly; #Quarterly; #Yearly};
+type Payment__345122729 =
+  {
+    amount : Nat;
+    billId : BillId__994444545;
+    createdAt : Timestamp__301639476;
+    id : PaymentId__1028686908;
+    method : PaymentMethod__46913440;
+    notes : Text;
+    paymentDate : Timestamp__301639476;
+    receiptId : ?ReceiptId__956149208;
+    referenceNumber : Text;
+    studentId : StudentId__585118929
+  };
+type ReceiptId__956149208 = Nat;
+type Receipt__231383564 =
+  {
+    amount : Nat;
+    billId : BillId__994444545;
+    id : ReceiptId__956149208;
+    isDuplicate : Bool;
+    issuedAt : Timestamp__301639476;
+    method : PaymentMethod__46913440;
+    paymentDate : Timestamp__301639476;
+    paymentId : PaymentId__1028686908;
+    qrData : Text;
+    receiptNumber : Text;
+    studentId : StudentId__585118929
+  };
+type Role__300349085 = {#Accountant; #SchoolAdmin; #SuperAdmin; #Teacher};
+type StudentId__585118929 = Nat;
+type StudentStatus__584564141 = {#Active; #Inactive};
+type Student__26715999 =
+  {
+    academicYear : Text;
+    address : Text;
+    admissionNumber : Text;
+    classId : ClassId__805055241;
+    createdAt : Timestamp__301639476;
+    dob : Text;
+    gender : Text;
+    id : StudentId__585118929;
+    name : Text;
+    parentEmail : Text;
+    parentName : Text;
+    parentPhone : Text;
+    photoUrl : Text;
+    rollNumber : Text;
+    sectionId : Nat;
+    status : StudentStatus__584564141
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Nat;
+type UserStatus__418351110 = {#Active; #Inactive};
+type User__98118558 =
+  {
+    createdAt : Timestamp__301639476;
+    email : Text;
+    id : UserId__158757552;
+    lastLogin : Timestamp__301639476;
+    name : Text;
+    principal : Principal;
+    role : Role__300349085;
+    status : UserStatus__418351110
+  };
+actor {
+  stable auditLogs :
+    {
+      var root : Node__46230540<AuditLogId__176736089, AuditLog__942324523>;
+      var size : Nat__490723111
+    };
+  stable bill0 :
+    {
+      academicYear : Text;
+      billNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      discountAmount : Nat;
+      dueDate : Timestamp__301639476;
+      feeComponents : [FeeComponent__348098996];
+      fineAmount : Nat;
+      id : BillId__994444545;
+      month : Text;
+      netAmount : Nat;
+      status : BillStatus__488604250;
+      studentId : StudentId__585118929;
+      totalAmount : Nat
+    };
+  stable bill1 :
+    {
+      academicYear : Text;
+      billNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      discountAmount : Nat;
+      dueDate : Timestamp__301639476;
+      feeComponents : [FeeComponent__348098996];
+      fineAmount : Nat;
+      id : BillId__994444545;
+      month : Text;
+      netAmount : Nat;
+      status : BillStatus__488604250;
+      studentId : StudentId__585118929;
+      totalAmount : Nat
+    };
+  stable bill2 :
+    {
+      academicYear : Text;
+      billNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      discountAmount : Nat;
+      dueDate : Timestamp__301639476;
+      feeComponents : [FeeComponent__348098996];
+      fineAmount : Nat;
+      id : BillId__994444545;
+      month : Text;
+      netAmount : Nat;
+      status : BillStatus__488604250;
+      studentId : StudentId__585118929;
+      totalAmount : Nat
+    };
+  stable bills :
+    {
+      var root : Node__46230540<BillId__994444545, Bill__359205290>;
+      var size : Nat__490723111
+    };
+  stable classes :
+    {
+      var root : Node__46230540<ClassId__805055241, Class__199118982>;
+      var size : Nat__490723111
+    };
+  stable classesLibState :
+    {
+      classes : Map__605269027<ClassId__805055241, Class__199118982>;
+      state : {var nextClassId : Nat}
+    };
+  stable classesState : {var nextClassId : Nat};
+  stable classesUsersState :
+    {
+      principalIndex : Map__605269027<Principal, UserId__158757552>;
+      state : {var nextUserId : Nat};
+      users : Map__605269027<UserId__158757552, User__98118558>
+    };
+  stable cls0 :
+    {
+      academicYear : Text;
+      capacity : Nat;
+      classTeacherId : ?UserId__158757552;
+      createdAt : Timestamp__301639476;
+      id : ClassId__805055241;
+      name : Text;
+      section : Text;
+      studentCount : Nat
+    };
+  stable cls1 :
+    {
+      academicYear : Text;
+      capacity : Nat;
+      classTeacherId : ?UserId__158757552;
+      createdAt : Timestamp__301639476;
+      id : ClassId__805055241;
+      name : Text;
+      section : Text;
+      studentCount : Nat
+    };
+  stable cls2 :
+    {
+      academicYear : Text;
+      capacity : Nat;
+      classTeacherId : ?UserId__158757552;
+      createdAt : Timestamp__301639476;
+      id : ClassId__805055241;
+      name : Text;
+      section : Text;
+      studentCount : Nat
+    };
+  stable comp0 :
+    {
+      amount : Nat;
+      category : FeeCategory__175267181;
+      discount : Nat;
+      fine : Nat
+    };
+  stable comp1 :
+    {
+      amount : Nat;
+      category : FeeCategory__175267181;
+      discount : Nat;
+      fine : Nat
+    };
+  stable comp2 :
+    {
+      amount : Nat;
+      category : FeeCategory__175267181;
+      discount : Nat;
+      fine : Nat
+    };
+  stable feeStructures :
+    {
+      var root :
+        Node__46230540<FeeStructureId__947360498, FeeStructure__229908784>;
+      var size : Nat__490723111
+    };
+  stable feesLibState :
+    {
+      bills : Map__605269027<BillId__994444545, Bill__359205290>;
+      feeStructures :
+        Map__605269027<FeeStructureId__947360498, FeeStructure__229908784>;
+      payments : Map__605269027<PaymentId__1028686908, Payment__345122729>;
+      receipts : Map__605269027<ReceiptId__956149208, Receipt__231383564>;
+      state :
+        {
+          var nextBillId : Nat;
+          var nextFeeStructureId : Nat;
+          var nextPaymentId : Nat;
+          var nextReceiptId : Nat
+        }
+    };
+  stable feesState :
+    {
+      var nextBillId : Nat;
+      var nextFeeStructureId : Nat;
+      var nextPaymentId : Nat;
+      var nextReceiptId : Nat
+    };
+  stable feesUsersState :
+    {
+      principalIndex : Map__605269027<Principal, UserId__158757552>;
+      state : {var nextUserId : Nat};
+      users : Map__605269027<UserId__158757552, User__98118558>
+    };
+  stable fs0 :
+    {
+      academicYear : Text;
+      amount : Nat;
+      category : FeeCategory__175267181;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      customCategoryName : Text;
+      discountPercent : Nat;
+      dueDayOfMonth : Nat;
+      fineRatePercent : Nat;
+      id : FeeStructureId__947360498;
+      isActive : Bool;
+      paymentPlan : PaymentPlan__778863178
+    };
+  stable fs1 :
+    {
+      academicYear : Text;
+      amount : Nat;
+      category : FeeCategory__175267181;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      customCategoryName : Text;
+      discountPercent : Nat;
+      dueDayOfMonth : Nat;
+      fineRatePercent : Nat;
+      id : FeeStructureId__947360498;
+      isActive : Bool;
+      paymentPlan : PaymentPlan__778863178
+    };
+  stable fs2 :
+    {
+      academicYear : Text;
+      amount : Nat;
+      category : FeeCategory__175267181;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      customCategoryName : Text;
+      discountPercent : Nat;
+      dueDayOfMonth : Nat;
+      fineRatePercent : Nat;
+      id : FeeStructureId__947360498;
+      isActive : Bool;
+      paymentPlan : PaymentPlan__778863178
+    };
+  stable fs3 :
+    {
+      academicYear : Text;
+      amount : Nat;
+      category : FeeCategory__175267181;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      customCategoryName : Text;
+      discountPercent : Nat;
+      dueDayOfMonth : Nat;
+      fineRatePercent : Nat;
+      id : FeeStructureId__947360498;
+      isActive : Bool;
+      paymentPlan : PaymentPlan__778863178
+    };
+  stable fs4 :
+    {
+      academicYear : Text;
+      amount : Nat;
+      category : FeeCategory__175267181;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      customCategoryName : Text;
+      discountPercent : Nat;
+      dueDayOfMonth : Nat;
+      fineRatePercent : Nat;
+      id : FeeStructureId__947360498;
+      isActive : Bool;
+      paymentPlan : PaymentPlan__778863178
+    };
+  stable fs5 :
+    {
+      academicYear : Text;
+      amount : Nat;
+      category : FeeCategory__175267181;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      customCategoryName : Text;
+      discountPercent : Nat;
+      dueDayOfMonth : Nat;
+      fineRatePercent : Nat;
+      id : FeeStructureId__947360498;
+      isActive : Bool;
+      paymentPlan : PaymentPlan__778863178
+    };
+  stable notifLibState :
+    {
+      auditLogs : Map__605269027<AuditLogId__176736089, AuditLog__942324523>;
+      notifications :
+        Map__605269027<NotificationId__307495059, Notification__264708741>;
+      state : {var nextAuditLogId : Nat; var nextNotificationId : Nat}
+    };
+  stable notifState :
+    {var nextAuditLogId : Nat; var nextNotificationId : Nat};
+  stable notifUsersState :
+    {
+      principalIndex : Map__605269027<Principal, UserId__158757552>;
+      state : {var nextUserId : Nat};
+      users : Map__605269027<UserId__158757552, User__98118558>
+    };
+  stable notifications :
+    {
+      var root :
+        Node__46230540<NotificationId__307495059, Notification__264708741>;
+      var size : Nat__490723111
+    };
+  stable now : Int;
+  stable pay0 :
+    {
+      amount : Nat;
+      billId : BillId__994444545;
+      createdAt : Timestamp__301639476;
+      id : PaymentId__1028686908;
+      method : PaymentMethod__46913440;
+      notes : Text;
+      paymentDate : Timestamp__301639476;
+      receiptId : ?ReceiptId__956149208;
+      referenceNumber : Text;
+      studentId : StudentId__585118929
+    };
+  stable pay1 :
+    {
+      amount : Nat;
+      billId : BillId__994444545;
+      createdAt : Timestamp__301639476;
+      id : PaymentId__1028686908;
+      method : PaymentMethod__46913440;
+      notes : Text;
+      paymentDate : Timestamp__301639476;
+      receiptId : ?ReceiptId__956149208;
+      referenceNumber : Text;
+      studentId : StudentId__585118929
+    };
+  stable payments :
+    {
+      var root : Node__46230540<PaymentId__1028686908, Payment__345122729>;
+      var size : Nat__490723111
+    };
+  stable principalIndex :
+    {
+      var root : Node__46230540<Principal, UserId__158757552>;
+      var size : Nat__490723111
+    };
+  stable qr0 : Text;
+  stable qr1 : Text;
+  stable rcpt0 :
+    {
+      amount : Nat;
+      billId : BillId__994444545;
+      id : ReceiptId__956149208;
+      isDuplicate : Bool;
+      issuedAt : Timestamp__301639476;
+      method : PaymentMethod__46913440;
+      paymentDate : Timestamp__301639476;
+      paymentId : PaymentId__1028686908;
+      qrData : Text;
+      receiptNumber : Text;
+      studentId : StudentId__585118929
+    };
+  stable rcpt1 :
+    {
+      amount : Nat;
+      billId : BillId__994444545;
+      id : ReceiptId__956149208;
+      isDuplicate : Bool;
+      issuedAt : Timestamp__301639476;
+      method : PaymentMethod__46913440;
+      paymentDate : Timestamp__301639476;
+      paymentId : PaymentId__1028686908;
+      qrData : Text;
+      receiptNumber : Text;
+      studentId : StudentId__585118929
+    };
+  stable receipts :
+    {
+      var root : Node__46230540<ReceiptId__956149208, Receipt__231383564>;
+      var size : Nat__490723111
+    };
+  stable st0 :
+    {
+      academicYear : Text;
+      address : Text;
+      admissionNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      dob : Text;
+      gender : Text;
+      id : StudentId__585118929;
+      name : Text;
+      parentEmail : Text;
+      parentName : Text;
+      parentPhone : Text;
+      photoUrl : Text;
+      rollNumber : Text;
+      sectionId : Nat;
+      status : StudentStatus__584564141
+    };
+  stable st1 :
+    {
+      academicYear : Text;
+      address : Text;
+      admissionNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      dob : Text;
+      gender : Text;
+      id : StudentId__585118929;
+      name : Text;
+      parentEmail : Text;
+      parentName : Text;
+      parentPhone : Text;
+      photoUrl : Text;
+      rollNumber : Text;
+      sectionId : Nat;
+      status : StudentStatus__584564141
+    };
+  stable st2 :
+    {
+      academicYear : Text;
+      address : Text;
+      admissionNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      dob : Text;
+      gender : Text;
+      id : StudentId__585118929;
+      name : Text;
+      parentEmail : Text;
+      parentName : Text;
+      parentPhone : Text;
+      photoUrl : Text;
+      rollNumber : Text;
+      sectionId : Nat;
+      status : StudentStatus__584564141
+    };
+  stable st3 :
+    {
+      academicYear : Text;
+      address : Text;
+      admissionNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      dob : Text;
+      gender : Text;
+      id : StudentId__585118929;
+      name : Text;
+      parentEmail : Text;
+      parentName : Text;
+      parentPhone : Text;
+      photoUrl : Text;
+      rollNumber : Text;
+      sectionId : Nat;
+      status : StudentStatus__584564141
+    };
+  stable st4 :
+    {
+      academicYear : Text;
+      address : Text;
+      admissionNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      dob : Text;
+      gender : Text;
+      id : StudentId__585118929;
+      name : Text;
+      parentEmail : Text;
+      parentName : Text;
+      parentPhone : Text;
+      photoUrl : Text;
+      rollNumber : Text;
+      sectionId : Nat;
+      status : StudentStatus__584564141
+    };
+  stable st5 :
+    {
+      academicYear : Text;
+      address : Text;
+      admissionNumber : Text;
+      classId : ClassId__805055241;
+      createdAt : Timestamp__301639476;
+      dob : Text;
+      gender : Text;
+      id : StudentId__585118929;
+      name : Text;
+      parentEmail : Text;
+      parentName : Text;
+      parentPhone : Text;
+      photoUrl : Text;
+      rollNumber : Text;
+      sectionId : Nat;
+      status : StudentStatus__584564141
+    };
+  stable students :
+    {
+      var root : Node__46230540<StudentId__585118929, Student__26715999>;
+      var size : Nat__490723111
+    };
+  stable studentsClassesLibState :
+    {
+      classes : Map__605269027<ClassId__805055241, Class__199118982>;
+      state : {var nextClassId : Nat}
+    };
+  stable studentsLibState :
+    {
+      state : {var nextStudentId : Nat};
+      students : Map__605269027<StudentId__585118929, Student__26715999>
+    };
+  stable studentsState : {var nextStudentId : Nat};
+  stable studentsUsersState :
+    {
+      principalIndex : Map__605269027<Principal, UserId__158757552>;
+      state : {var nextUserId : Nat};
+      users : Map__605269027<UserId__158757552, User__98118558>
+    };
+  stable users :
+    {
+      var root : Node__46230540<UserId__158757552, User__98118558>;
+      var size : Nat__490723111
+    };
+  stable usersLibState :
+    {
+      principalIndex : Map__605269027<Principal, UserId__158757552>;
+      state : {var nextUserId : Nat};
+      users : Map__605269027<UserId__158757552, User__98118558>
+    };
+  stable usersState : {var nextUserId : Nat}
+};

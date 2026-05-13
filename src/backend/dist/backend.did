@@ -1,0 +1,372 @@
+type UserStatus = 
+ variant {
+   Active;
+   Inactive;
+ };
+type UserId = nat;
+type User = 
+ record {
+   createdAt: Timestamp;
+   email: text;
+   id: UserId;
+   lastLogin: Timestamp;
+   name: text;
+   "principal": principal;
+   role: Role;
+   status: UserStatus;
+ };
+type Timestamp = int;
+type StudentStatus = 
+ variant {
+   Active;
+   Inactive;
+ };
+type StudentInput = 
+ record {
+   academicYear: text;
+   address: text;
+   admissionNumber: text;
+   classId: ClassId;
+   dob: text;
+   gender: text;
+   name: text;
+   parentEmail: text;
+   parentName: text;
+   parentPhone: text;
+   photoUrl: text;
+   rollNumber: text;
+   sectionId: nat;
+ };
+type StudentId = nat;
+type StudentFilter = 
+ record {
+   academicYear: opt text;
+   classId: opt ClassId;
+   searchTerm: opt text;
+   status: opt StudentStatus;
+ };
+type Student = 
+ record {
+   academicYear: text;
+   address: text;
+   admissionNumber: text;
+   classId: ClassId;
+   createdAt: Timestamp;
+   dob: text;
+   gender: text;
+   id: StudentId;
+   name: text;
+   parentEmail: text;
+   parentName: text;
+   parentPhone: text;
+   photoUrl: text;
+   rollNumber: text;
+   sectionId: nat;
+   status: StudentStatus;
+ };
+type Role = 
+ variant {
+   Accountant;
+   SchoolAdmin;
+   SuperAdmin;
+   Teacher;
+ };
+type Result_9 = 
+ variant {
+   err: text;
+   ok: Notification;
+ };
+type Result_8 = 
+ variant {
+   err: text;
+   ok: vec Bill;
+ };
+type Result_7 = 
+ variant {
+   err: text;
+   ok: vec User;
+ };
+type Result_6 = 
+ variant {
+   err: text;
+   ok: bool;
+ };
+type Result_5 = 
+ variant {
+   err: text;
+   ok: Receipt;
+ };
+type Result_4 = 
+ variant {
+   err: text;
+   ok: User;
+ };
+type Result_3 = 
+ variant {
+   err: text;
+   ok: Bill;
+ };
+type Result_2 = 
+ variant {
+   err: text;
+   ok: Class;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: FeeStructure;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: Student;
+ };
+type ReceiptId = nat;
+type ReceiptFilter = 
+ record {
+   dateFrom: opt Timestamp;
+   dateTo: opt Timestamp;
+   studentId: opt StudentId;
+ };
+type Receipt = 
+ record {
+   amount: nat;
+   billId: BillId;
+   id: ReceiptId;
+   isDuplicate: bool;
+   issuedAt: Timestamp;
+   method: PaymentMethod;
+   paymentDate: Timestamp;
+   paymentId: PaymentId;
+   qrData: text;
+   receiptNumber: text;
+   studentId: StudentId;
+ };
+type PaymentPlan = 
+ variant {
+   Monthly;
+   Quarterly;
+   Yearly;
+ };
+type PaymentMethod = 
+ variant {
+   BankTransfer;
+   Card;
+   Cash;
+   Online;
+   UPI;
+ };
+type PaymentInput = 
+ record {
+   amount: nat;
+   billId: BillId;
+   method: PaymentMethod;
+   notes: text;
+   referenceNumber: text;
+   studentId: StudentId;
+ };
+type PaymentId = nat;
+type PaymentFilter = 
+ record {
+   dateFrom: opt Timestamp;
+   dateTo: opt Timestamp;
+   method: opt PaymentMethod;
+   studentId: opt StudentId;
+ };
+type Payment = 
+ record {
+   amount: nat;
+   billId: BillId;
+   createdAt: Timestamp;
+   id: PaymentId;
+   method: PaymentMethod;
+   notes: text;
+   paymentDate: Timestamp;
+   receiptId: opt ReceiptId;
+   referenceNumber: text;
+   studentId: StudentId;
+ };
+type NotificationType = 
+ variant {
+   BillGenerated;
+   FeeReminder;
+   OverdueAlert;
+   PaymentConfirmation;
+ };
+type NotificationId = nat;
+type Notification = 
+ record {
+   createdAt: Timestamp;
+   id: NotificationId;
+   isRead: bool;
+   message: text;
+   notifType: NotificationType;
+   recipientPrincipal: principal;
+   studentId: StudentId;
+ };
+type FeeStructureInput = 
+ record {
+   academicYear: text;
+   amount: nat;
+   category: FeeCategory;
+   classId: ClassId;
+   customCategoryName: text;
+   discountPercent: nat;
+   dueDayOfMonth: nat;
+   fineRatePercent: nat;
+   paymentPlan: PaymentPlan;
+ };
+type FeeStructureId = nat;
+type FeeStructure = 
+ record {
+   academicYear: text;
+   amount: nat;
+   category: FeeCategory;
+   classId: ClassId;
+   createdAt: Timestamp;
+   customCategoryName: text;
+   discountPercent: nat;
+   dueDayOfMonth: nat;
+   fineRatePercent: nat;
+   id: FeeStructureId;
+   isActive: bool;
+   paymentPlan: PaymentPlan;
+ };
+type FeeComponent = 
+ record {
+   amount: nat;
+   category: FeeCategory;
+   discount: nat;
+   fine: nat;
+ };
+type FeeCategory = 
+ variant {
+   Admission;
+   Custom;
+   Exam;
+   Hostel;
+   Library;
+   Miscellaneous;
+   Transport;
+   Tuition;
+ };
+type DashboardStats = 
+ record {
+   dueStudentsCount: nat;
+   pendingFees: nat;
+   todayCollection: nat;
+   totalCollected: nat;
+   totalStudents: nat;
+ };
+type ClassInput = 
+ record {
+   academicYear: text;
+   capacity: nat;
+   classTeacherId: opt UserId;
+   name: text;
+   section: text;
+ };
+type ClassId = nat;
+type Class = 
+ record {
+   academicYear: text;
+   capacity: nat;
+   classTeacherId: opt UserId;
+   createdAt: Timestamp;
+   id: ClassId;
+   name: text;
+   section: text;
+   studentCount: nat;
+ };
+type BillStatus = 
+ variant {
+   Cancelled;
+   Overdue;
+   Paid;
+   Partial;
+   Pending;
+ };
+type BillId = nat;
+type BillFilter = 
+ record {
+   classId: opt ClassId;
+   month: opt text;
+   status: opt BillStatus;
+   studentId: opt StudentId;
+ };
+type Bill = 
+ record {
+   academicYear: text;
+   billNumber: text;
+   classId: ClassId;
+   createdAt: Timestamp;
+   discountAmount: nat;
+   dueDate: Timestamp;
+   feeComponents: vec FeeComponent;
+   fineAmount: nat;
+   id: BillId;
+   month: text;
+   netAmount: nat;
+   status: BillStatus;
+   studentId: StudentId;
+   totalAmount: nat;
+ };
+type AuditLogId = nat;
+type AuditLogFilter = 
+ record {
+   dateFrom: opt Timestamp;
+   dateTo: opt Timestamp;
+   entityType: opt text;
+   userId: opt UserId;
+ };
+type AuditLog = 
+ record {
+   action: text;
+   entityId: nat;
+   entityType: text;
+   id: AuditLogId;
+   newValue: text;
+   oldValue: text;
+   timestamp: Timestamp;
+   userId: UserId;
+ };
+service : {
+  addAuditLog: (action: text, entityType: text, entityId: nat, oldValue:
+   text, newValue: text) -> (Result_6);
+  addClass: (input: ClassInput) -> (Result_2);
+  addNotification: (notifType: NotificationType, studentId: StudentId,
+   message: text) -> (Result_9);
+  addStudent: (input: StudentInput) -> (Result);
+  createFeeStructure: (input: FeeStructureInput) -> (Result_1);
+  deleteClass: (id: ClassId) -> (Result_6);
+  deleteFeeStructure: (id: FeeStructureId) -> (Result_6);
+  deleteStudent: (id: StudentId) -> (Result_6);
+  duplicateReceipt: (id: ReceiptId) -> (Result_5);
+  generateBills: (classId: ClassId, academicYear: text, month: text) ->
+   (Result_8);
+  getAuditLogs: (filter: AuditLogFilter) -> (vec AuditLog) query;
+  getBill: (id: BillId) -> (opt Bill) query;
+  getBills: (filter: BillFilter) -> (vec Bill) query;
+  getClass: (id: ClassId) -> (opt Class) query;
+  getClasses: (academicYear: opt text) -> (vec Class) query;
+  getFeeStructures: (classId: opt ClassId, academicYear: opt text) ->
+   (vec FeeStructure) query;
+  getNotifications: () -> (vec Notification) query;
+  getPayments: (filter: PaymentFilter) -> (vec Payment) query;
+  getReceipt: (id: ReceiptId) -> (opt Receipt) query;
+  getReceipts: (filter: ReceiptFilter) -> (vec Receipt) query;
+  getStats: () -> (DashboardStats) query;
+  getStudent: (id: StudentId) -> (opt Student) query;
+  getStudents: (filter: StudentFilter) -> (vec Student) query;
+  getUserByPrincipal: () -> (opt User) query;
+  listUsers: () -> (Result_7) query;
+  markNotificationRead: (id: NotificationId) -> (Result_6);
+  recordPayment: (input: PaymentInput) -> (Result_5);
+  registerUser: (name: text, email: text, role: Role) -> (Result_4);
+  updateBillStatus: (billId: BillId, status: BillStatus) -> (Result_3);
+  updateClass: (id: ClassId, input: ClassInput) -> (Result_2);
+  updateFeeStructure: (id: FeeStructureId, input: FeeStructureInput) ->
+   (Result_1);
+  updateLastLogin: () -> ();
+  updateStudent: (id: StudentId, input: StudentInput) -> (Result);
+}

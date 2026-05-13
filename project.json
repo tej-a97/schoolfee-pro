@@ -1,0 +1,31 @@
+{
+  "overview": "A production-ready Private School Fee Management System with role-based access, modern glass UI, student management, fee billing, payment tracking, receipt generation, and analytics — built for real-world school operations.",
+  "features": [
+    "Role-based access control with 4 roles: Super Admin, School Admin, Accountant, Teacher",
+    "Admin dashboard with KPI cards, charts, recent transactions, and defaulters list",
+    "Student management with photo uploads, class allocation, and fee history",
+    "Class and section management with academic year mapping",
+    "Fee structure builder with class-wise fees, installments, fine rules, and discounts",
+    "Bulk fee bill generation with auto-calculation, QR codes, and PDF export",
+    "Payment recording (cash/online/card/UPI) with partial and full payment support",
+    "Auto-generated PDF receipts with school branding and QR codes",
+    "Email notifications for due reminders, payment confirmations, and overdue alerts",
+    "Reports and analytics: daily/monthly collection, pending fees, defaulters, and exports",
+    "Dark and light mode with glass morphism design, responsive on all devices",
+    "Global search and advanced filters across all modules"
+  ],
+  "category": "education-erp",
+  "tags": [
+    "school",
+    "fee-management",
+    "erp",
+    "education",
+    "payments",
+    "receipts",
+    "reports",
+    "rbac",
+    "dashboard",
+    "analytics"
+  ],
+  "last_updated": "2026-05-13T11:01:07.016Z"
+}
